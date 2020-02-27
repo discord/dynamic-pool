@@ -92,8 +92,16 @@ impl<T: DynamicReset> DynamicPool<T> {
     }
 }
 
+impl<T: DynamicReset> Clone for DynamicPool<T> {
+    fn clone(&self) -> Self {
+        Self {
+            data: self.data.clone(),
+        }
+    }
+}
+
 // data shared by a `DynamicPool`.
-struct PoolData<T: DynamicReset> {
+struct PoolData<T> {
     items: ArrayQueue<T>,
     create: Box<dyn Fn() -> T>,
 }
