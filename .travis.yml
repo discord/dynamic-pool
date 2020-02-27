@@ -1,0 +1,22 @@
+language: rust
+
+cache: cargo
+
+branches:
+  only:
+    - master
+    - staging
+    - trying
+
+matrix:
+  fast_finish: true
+  include:
+    # Run tests + checks against stable
+    - rust: stable
+      name: "dynamic-pool on stable"
+      script: ./ci/tests.sh
+
+    # Check formatting.
+    - rust: stable
+      name: "rustfmt"
+      script: ./ci/rustfmt.sh
