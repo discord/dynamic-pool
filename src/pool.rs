@@ -25,7 +25,7 @@ impl<T: DynamicReset> DynamicPool<T> {
     /// # panics.
     ///
     /// panics if `initial_capacity > maximum_capacity`.
-    pub fn new<F: Fn() -> T + 'static>(
+    pub fn new<F: Fn() -> T + Send + 'static>(
         initial_capacity: usize,
         maximum_capacity: usize,
         create: F,
@@ -103,7 +103,7 @@ impl<T: DynamicReset> Clone for DynamicPool<T> {
 // data shared by a `DynamicPool`.
 struct PoolData<T> {
     items: ArrayQueue<T>,
-    create: Box<dyn Fn() -> T>,
+    create: Box<dyn Fn() -> T + Send + 'static>,
 }
 
 impl<T: DynamicReset + Debug> Debug for PoolData<T> {
