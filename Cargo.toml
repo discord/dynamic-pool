@@ -13,4 +13,4 @@ documentation = "https://docs.rs/dynamic-pool"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-crossbeam-queue = "0.2"
+crossbeam-queue = "0.3"
