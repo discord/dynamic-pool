@@ -37,6 +37,7 @@ impl<T: DynamicReset> DynamicPool<T> {
         for x in (0..initial_capacity).map(|_| create()) {
             items
                 .push(x)
+                .map_err(drop)
                 .expect("invariant: items.len() always less than initial_capacity.");
         }
 
@@ -55,7 +56,7 @@ impl<T: DynamicReset> DynamicPool<T> {
             .data
             .items
             .pop()
-            .unwrap_or_else(|_| (self.data.create)());
+            .unwrap_or_else(|| (self.data.create)());
 
         DynamicPoolItem {
             data: Arc::downgrade(&self.data),
@@ -65,7 +66,7 @@ impl<T: DynamicReset> DynamicPool<T> {
 
     /// attempts to take an item from the pool, returning `none` if none is available. will never allocate.
     pub fn try_take(&self) -> Option<DynamicPoolItem<T>> {
-        let object = self.data.items.pop().ok()?;
+        let object = self.data.items.pop()?;
         let data = Arc::downgrade(&self.data);
 
         Some(DynamicPoolItem {
