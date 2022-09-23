@@ -1,3 +1,5 @@
+
+
 pub trait DynamicReset {
     fn reset(&mut self);
 }
@@ -13,174 +15,36 @@ where
     }
 }
 
-impl<T1, T2> DynamicReset for (T1, T2)
-where
-    T1: DynamicReset,
-    T2: DynamicReset,
-{
-    fn reset(&mut self) {
-        self.0.reset();
-        self.1.reset();
-    }
+
+macro_rules! impl_dynamic_reset {
+    () => ();
+    ($($name:ident),+; $($idx:tt),+) => (
+        #[doc(hidden)]
+        impl<$($name: DynamicReset),*> DynamicReset for ($($name,)*) {
+            fn reset(&mut self) {
+                $(
+                    self.$idx.reset();
+                )*
+            }
+        }
+    )
 }
 
-impl<T1, T2, T3> DynamicReset for (T1, T2, T3)
-where
-    T1: DynamicReset,
-    T2: DynamicReset,
-    T3: DynamicReset,
-{
-    fn reset(&mut self) {
-        self.0.reset();
-        self.1.reset();
-        self.2.reset();
-    }
-}
 
-impl<T1, T2, T3, T4> DynamicReset for (T1, T2, T3, T4)
-where
-    T1: DynamicReset,
-    T2: DynamicReset,
-    T3: DynamicReset,
-    T4: DynamicReset,
-{
-    fn reset(&mut self) {
-        self.0.reset();
-        self.1.reset();
-        self.2.reset();
-        self.3.reset();
-    }
-}
 
-impl<T1, T2, T3, T4, T5> DynamicReset for (T1, T2, T3, T4, T5)
-where
-    T1: DynamicReset,
-    T2: DynamicReset,
-    T3: DynamicReset,
-    T4: DynamicReset,
-    T5: DynamicReset,
-{
-    fn reset(&mut self) {
-        self.0.reset();
-        self.1.reset();
-        self.2.reset();
-        self.3.reset();
-        self.4.reset();
-    }
-}
-
-impl<T1, T2, T3, T4, T5, T6> DynamicReset for (T1, T2, T3, T4, T5, T6)
-where
-    T1: DynamicReset,
-    T2: DynamicReset,
-    T3: DynamicReset,
-    T4: DynamicReset,
-    T5: DynamicReset,
-    T6: DynamicReset,
-{
-    fn reset(&mut self) {
-        self.0.reset();
-        self.1.reset();
-        self.2.reset();
-        self.3.reset();
-        self.4.reset();
-        self.5.reset();
-    }
-}
-
-impl<T1, T2, T3, T4, T5, T6, T7> DynamicReset for (T1, T2, T3, T4, T5, T6, T7)
-where
-    T1: DynamicReset,
-    T2: DynamicReset,
-    T3: DynamicReset,
-    T4: DynamicReset,
-    T5: DynamicReset,
-    T6: DynamicReset,
-    T7: DynamicReset,
-{
-    fn reset(&mut self) {
-        self.0.reset();
-        self.1.reset();
-        self.2.reset();
-        self.3.reset();
-        self.4.reset();
-        self.5.reset();
-        self.6.reset();
-    }
-}
-
-impl<T1, T2, T3, T4, T5, T6, T7, T8> DynamicReset for (T1, T2, T3, T4, T5, T6, T7, T8)
-where
-    T1: DynamicReset,
-    T2: DynamicReset,
-    T3: DynamicReset,
-    T4: DynamicReset,
-    T5: DynamicReset,
-    T6: DynamicReset,
-    T7: DynamicReset,
-    T8: DynamicReset,
-{
-    fn reset(&mut self) {
-        self.0.reset();
-        self.1.reset();
-        self.2.reset();
-        self.3.reset();
-        self.4.reset();
-        self.5.reset();
-        self.6.reset();
-        self.7.reset();
-    }
-}
-
-impl<T1, T2, T3, T4, T5, T6, T7, T8, T9> DynamicReset for (T1, T2, T3, T4, T5, T6, T7, T8, T9)
-where
-    T1: DynamicReset,
-    T2: DynamicReset,
-    T3: DynamicReset,
-    T4: DynamicReset,
-    T5: DynamicReset,
-    T6: DynamicReset,
-    T7: DynamicReset,
-    T8: DynamicReset,
-    T9: DynamicReset,
-{
-    fn reset(&mut self) {
-        self.0.reset();
-        self.1.reset();
-        self.2.reset();
-        self.3.reset();
-        self.4.reset();
-        self.5.reset();
-        self.6.reset();
-        self.7.reset();
-        self.8.reset();
-    }
-}
-
-impl<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> DynamicReset
-    for (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10)
-where
-    T1: DynamicReset,
-    T2: DynamicReset,
-    T3: DynamicReset,
-    T4: DynamicReset,
-    T5: DynamicReset,
-    T6: DynamicReset,
-    T7: DynamicReset,
-    T8: DynamicReset,
-    T9: DynamicReset,
-    T10: DynamicReset,
-{
-    fn reset(&mut self) {
-        self.0.reset();
-        self.1.reset();
-        self.2.reset();
-        self.3.reset();
-        self.4.reset();
-        self.5.reset();
-        self.6.reset();
-        self.7.reset();
-        self.8.reset();
-        self.9.reset();
-    }
-}
+impl_dynamic_reset!(T0; 0);
+impl_dynamic_reset!(T0, T1; 0, 1);
+impl_dynamic_reset!(T0, T1, T2; 0, 1, 2);
+impl_dynamic_reset!(T0, T1, T2, T3; 0, 1, 2, 3);
+impl_dynamic_reset!(T0, T1, T2, T3, T4; 0, 1, 2, 3, 4);
+impl_dynamic_reset!(T0, T1, T2, T3, T4, T5; 0, 1, 2, 3, 4, 5);
+impl_dynamic_reset!(T0, T1, T2, T3, T4, T5, T6; 0, 1, 2, 3, 4, 5, 6);
+impl_dynamic_reset!(T0, T1, T2, T3, T4, T5, T6, T7; 0, 1, 2, 3, 4, 5, 6, 6);
+impl_dynamic_reset!(T0, T1, T2, T3, T4, T5, T6, T7, T8; 0, 1, 2, 3, 4, 5, 6, 7, 8);
+impl_dynamic_reset!(T0, T1, T2, T3, T4, T5, T6, T7, T8, T9; 0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
+impl_dynamic_reset!(T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10; 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+impl_dynamic_reset!(T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11; 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11);
+impl_dynamic_reset!(T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12; 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
+impl_dynamic_reset!(T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13; 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13);
+impl_dynamic_reset!(T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14; 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14);
+impl_dynamic_reset!(T0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15; 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15);
